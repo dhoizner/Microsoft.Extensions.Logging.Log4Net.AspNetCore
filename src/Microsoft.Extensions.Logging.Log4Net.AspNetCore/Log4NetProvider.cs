@@ -88,7 +88,12 @@
             }
 
             this.loggerRepository = LogManager.CreateRepository(
-                Assembly.GetEntryAssembly() ?? GetCallingAssemblyFromStartup(),
+                Assembly.GetEntryAssembly()
+                    ?? GetCallingAssemblyFromStartup()
+#if NET472
+                    ?? GetWebEntryAssembly()
+#endif
+                    ,
                 typeof(log4net.Repository.Hierarchy.Hierarchy));
 
             if (watch)
@@ -236,6 +241,46 @@
 #endif
         }
 
+#if NET472
+        private static Assembly GetWebEntryAssembly()
+        {
+            if (System.Web.HttpContext.Current != null
+                    && System.Web.HttpContext.Current.ApplicationInstance != null)
+            {
+                var type = System.Web.HttpContext.Current.ApplicationInstance.GetType();
+                while (type != null && type.Namespace == "ASP")
+                {
+                    type = type.BaseType;
+                }
+
+                return type?.Assembly;
+            }
+            else
+            {
+                var stackTrace = new System.Diagnostics.StackTrace(2);
+
+                for (int i = stackTrace.FrameCount-1; i >= 0; i--)
+                {
+                    var frame = stackTrace.GetFrame(i);
+                    var type = frame.GetMethod()?.DeclaringType;
+
+                    if (type is null)
+                    {
+                        continue;
+                    }
+
+                    if (type.Namespace.StartsWith("Medidata", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return type.Assembly;
+                    }
+                }
+
+                return System.Reflection.Assembly.GetExecutingAssembly();
+            }
+
+            
+        }
+#endif
         /// <summary>
         /// Creates the logger implementation.
         /// </summary>

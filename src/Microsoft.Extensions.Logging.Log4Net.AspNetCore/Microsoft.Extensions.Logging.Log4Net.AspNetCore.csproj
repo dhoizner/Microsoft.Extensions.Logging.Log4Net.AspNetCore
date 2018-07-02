@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-		<TargetFrameworks>netcoreapp1.1;netcoreapp2.0;net462;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>netcoreapp1.1;netcoreapp2.0;net472;netstandard2.0</TargetFrameworks>
 	</PropertyGroup>
 	<PropertyGroup>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -28,11 +28,11 @@
 		</PackageReleaseNotes>
 		<PackageProjectUrl>https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore</RepositoryUrl>
-		<Version>2.2.1</Version>
+		<Version>2.2.2</Version>
 		<AssemblyVersion>2.2.1.0</AssemblyVersion>
 		<FileVersion>2.2.1.0</FileVersion>
-		<SignAssembly>true</SignAssembly>
-		<AssemblyOriginatorKeyFile>Microsoft.Extensions.Logging.Log4Net.AspNetCoreKey.pfx</AssemblyOriginatorKeyFile>
+		<SignAssembly>false</SignAssembly>
+		<!--<AssemblyOriginatorKeyFile>Microsoft.Extensions.Logging.Log4Net.AspNetCoreKey.pfx</AssemblyOriginatorKeyFile>-->
 		<PackageLicenseUrl>https://github.com/huorswords/Microsoft.Extensions.Logging.Log4Net.AspNetCore/blob/master/LICENSE</PackageLicenseUrl>
 	</PropertyGroup>
 
@@ -45,5 +45,9 @@
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.2" Condition="'$(TargetFramework)' == 'netcoreapp1.1'" />
 		<PackageReference Include="Microsoft.Extensions.Configuration" Version="2.1.1" Condition="'$(TargetFramework)' != 'netcoreapp1.1'" />
 	</ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <Reference Include="System.Web" />
+  </ItemGroup>
 
 </Project>
